@@ -15,7 +15,10 @@ app.use(express.json());
 // pass : mdCRqWra2UNJ3D7s 
 
 
-const uri = `mongodb+srv://dbuser1:mdCRqWra2UNJ3D7s@cluster0.y9wd8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+// const uri = `mongodb+srv://dbuser1:mdCRqWra2UNJ3D7s@cluster0.y9wd8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+
+
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.y9wd8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -63,6 +66,29 @@ async function run() {
             const result = await productsCollection.deleteOne(query);
             res.send(result);
         });
+
+
+        // update user
+        app.put('/product/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatedUser = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {
+                    name: updatedUser.name,
+                    email: updatedUser.email
+                }
+            };
+            const result = await productsCollection.updateOne(filter, updatedDoc, options);
+            res.send(result);
+
+        })
+
+
+
+
+
 
     }
 
