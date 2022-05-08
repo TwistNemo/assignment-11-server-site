@@ -25,6 +25,7 @@ async function run() {
         await client.connect();
         const productsCollection = client.db('foodFactoryDB').collection('products');
 
+
         // insert product 
         app.post('/product', async (req, res) => {
             const product = req.body;
